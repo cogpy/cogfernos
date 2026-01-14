@@ -1,3 +1,9 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
 # object files, libraries, etc
 *.[8qkv5967o]
 *.obj
