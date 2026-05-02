@@ -54,6 +54,10 @@ y.debug
 # initial mk from makemk.sh
 /utils/mk/mk
 
+# build artifacts from makemk.sh and mk install
+/[A-Z]*/*/bin/mk
+/[A-Z]*/*/include/
+
 # no binaries are committed for any of the netbsd ports
 # can be deleted if wildcard from the comment below is enabled
 /NetBSD/*/bin/
