@@ -44,7 +44,30 @@ rm -f $PLAT/lib/*.a $PLAT/bin/*
 rm -f utils/cc/y.tab.?
 
 # ensure the output directories exist
-mkdir -p $PLAT/lib $PLAT/bin
+mkdir -p $PLAT/lib $PLAT/bin $PLAT/include
+
+# install lib9.h so mk-based builds can find it in the platform include dir
+cp $ROOT/include/lib9.h $PLAT/include/ || error failed to install lib9.h
+
+# create a minimal u.h for architecture-specific types (mpdigit, FP macros, etc.)
+# these are needed by libmath and libmp. Guard conflicting definitions.
+if [ ! -f $PLAT/include/u.h ]; then
+	(
+		echo '#ifndef _U_H_'
+		echo '#define _U_H_'
+		echo '/* architecture-specific FP macros for Linux/386 */'
+		grep -e '#define.*FPINEX' -e '#define.*FPUNFL' -e '#define.*FPOVFL' \
+		     -e '#define.*FPZDIV' -e '#define.*FPINVAL' -e '#define.*FPRNR' \
+		     -e '#define.*FPRZ' -e '#define.*FPRPINF' -e '#define.*FPRNINF' \
+		     -e '#define.*FPRMASK' -e '#define.*FPPS' -e '#define.*FPPM' \
+		     -e '#define.*FPPDBL' -e '#define.*FPAINEX' -e '#define.*FPAO' \
+		     -e '#define.*FPAU' -e '#define.*FPAZ' -e '#define.*FPAI' \
+			$ROOT/Inferno/386/include/u.h
+		echo 'typedef union FPdbleword FPdbleword;'
+		echo 'union FPdbleword { double x; struct { unsigned long lo; unsigned long hi; }; };'
+		echo '#endif /* _U_H_ */'
+	) > $PLAT/include/u.h
+fi
 
 # libregexp
 cd $ROOT/utils/libregexp || error cannot find libregexp directory

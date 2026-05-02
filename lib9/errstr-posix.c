@@ -2,6 +2,9 @@
 
 #include <errno.h>
 
+/* forward declaration to avoid including <string.h> which conflicts with kern.h */
+extern char *strerror(int);
+
 static char errstring[ERRMAX];
 
 enum

@@ -1,4 +1,8 @@
+/* size_t: only define if not already defined by system headers */
+#ifndef __SIZE_T__
+#define __SIZE_T__
 typedef unsigned long size_t;
+#endif
 
 #define	nelem(x)	(sizeof(x)/sizeof((x)[0]))
 #define	offsetof(s, m)	(ulong)(&(((s*)0)->m))
@@ -22,7 +26,7 @@ extern	char*	strchr(char*, int);
 extern	int	strcmp(char*, char*);
 extern	char*	strcpy(char*, char*);
 extern	char*	strecpy(char*, char*, char*);
-extern	char*	strdup(char*);
+extern	char*	strdup(const char*);
 extern	char*	strncat(char*, char*, long);
 extern	char*	strncpy(char*, char*, long);
 extern	int	strncmp(char*, char*, long);
@@ -348,7 +352,10 @@ extern	uintptr	getcallerpc(void*);
 extern	char*	getenv(char*);
 extern	int	getfields(char*, char**, int, int, char*);
 extern	char*	getuser(void);
+/* getwd has a different signature on POSIX: only 1 arg (no size) */
+#ifndef __unix__
 extern	char*	getwd(char*, int);
+#endif
 extern	long	labs(long);
 extern	double	ldexp(double, int);
 /*extern	void	longjmp(jmp_buf, int);*/
@@ -356,18 +363,23 @@ extern	char*	mktemp(char*);
 extern	double	modf(double, double*);
 extern	int	netcrypt(void*, void*);
 /*extern	void	notejmp(void*, jmp_buf, int);*/
-extern	void	perror(char*);
+extern	void	perror(const char*);
 extern  int	postnote(int, int, char *);
+/* pow10(int) is Plan 9-specific; POSIX/gcc defines pow10(double) as a built-in */
+#ifndef __unix__
 extern	double	pow10(int);
 extern	double	ipow10(int);
+#else
+extern	double	ipow10(int);
+#endif
 extern	int	putenv(char*, char*);
 extern	void	qsort(void*, long, long, int (*)(void*, void*));
 /*extern	int	setjmp(jmp_buf);*/
-extern	double	strtod(char*, char**);
+extern	double	strtod(const char*, char**);
 extern	long	strtol(char*, char**, int);
 extern	ulong	strtoul(char*, char**, int);
-extern	vlong	strtoll(char*, char**, int);
-extern	uvlong	strtoull(char*, char**, int);
+extern	vlong	strtoll(const char*, char**, int);
+extern	uvlong	strtoull(const char*, char**, int);
 extern	void	sysfatal(char*, ...);
 #pragma	varargck	argpos	sysfatal	1
 extern	void	syslog(int, char*, char*, ...);
@@ -524,62 +536,100 @@ struct IOchunk
 
 extern	void	_exits(char*);
 
+/*
+ * Plan 9 system calls.
+ * On POSIX/Unix systems, many of these conflict with system headers.
+ * Guard them so POSIX files can include system headers without conflict.
+ */
+#ifndef __unix__
 extern	void	abort(void);
 extern	int	access(char*, int);
 extern	long	alarm(ulong);
+#endif
 extern	int	await(char*, int);
 extern	int	bind(char*, char*, int);
+#ifndef __unix__
 extern	int	brk(void*);
 extern	int	chdir(char*);
 extern	int	close(int);
+#endif
 extern	int	create(char*, int, ulong);
+#ifndef __unix__
 extern	int	dup(int, int);
+#endif
 extern	int	errstr(char*, uint);
 extern	int	exec(char*, char*[]);
+#ifndef __unix__
 extern	int	execl(char*, ...);
+#endif
 extern  int	filsys(int, int, char*);
+#ifndef __unix__
 extern	int	fork(void);
+#endif
 extern	int	rfork(int);
 extern	int	fauth(int, char*);
+#ifndef __unix__
+/* fstat and stat have different signatures on POSIX (struct stat* vs uchar*) */
 extern	int	fstat(int, uchar*, int);
 extern	int	fwstat(int, uchar*, int);
+#endif
 extern	int	fversion(int, int, char*, int);
 extern	int	mount(int, int, char*, int, char*);
 extern	int	unmount(char*, char*);
 extern	int	noted(int);
 extern	int	notify(void(*)(void*, char*));
+#ifndef __unix__
+/* open() on POSIX has a different signature: const char* and variadic */
 extern	int	open(char*, int);
+#endif
 extern	int	fd2path(int, char*, int);
+#ifndef __unix__
 extern	int	pipe(int*);
 extern	long	pread(int, void*, long, vlong);
 extern	long	pwrite(int, void*, long, vlong);
 extern	long	read(int, void*, long);
+#endif
 extern	long	readn(int, void*, long);
-extern	int	remove(char*);
+extern	int	remove(const char*);
+#ifndef __unix__
 extern	void*	sbrk(ulong);
+#endif
 extern	vlong	seek(int, vlong, int);
 extern	long	segattach(int, char*, void*, ulong);
 extern	int	segbrk(void*, void*);
 extern	int	segdetach(void*);
 extern	int	segflush(void*, ulong);
 extern	int	segfree(void*, ulong);
+#ifndef __unix__
 extern	int	sleep(long);
+/* stat() on POSIX has a different signature: const char*, struct stat* (not uchar*) */
 extern	int	stat(char*, uchar*, int);
+/* wait/waitpid have different signatures on POSIX */
 extern	Waitmsg*	wait(void);
 extern	int	waitpid(void);
 extern	long	write(int, void*, long);
+#endif
 extern	long	write9p(int, void*, long);
 extern	int	wstat(char*, char*);
 extern	ulong	rendezvous(ulong, ulong);
 
+#ifndef __unix__
 extern	int	getpid(void);
 extern	int	getppid(void);
+#endif
 extern	void	rerrstr(char*, uint);
 extern	char*	sysname(void);
 extern	void	werrstr(char*, ...);
 #pragma	varargck	argpos	werrstr	1
 
 extern char *argv0;
+#ifndef USED
+/* Plan 9's USED macro - supports multiple arguments to suppress unused warnings */
+#define USED(x, ...) ((void)((x), ##__VA_ARGS__))
+#endif
+#ifndef SET
+#define SET(x) ((x) = 0)
+#endif
 #define	ARGBEGIN	for((argv0||(argv0=*argv)),argv++,argc--;\
 			    argv[0] && argv[0][0]=='-' && argv[0][1];\
 			    argc--, argv++) {\
