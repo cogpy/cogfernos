@@ -41,7 +41,8 @@ jobs:
           cd ${{ github.workspace }}
           
           # Set up mkconfig with proper paths for CI
-          sed -i 's|ROOT=/usr/inferno|ROOT=${{ github.workspace }}|' mkconfig
+          # Replace ROOT= regardless of the current value (handles both default and previously-hardcoded paths)
+          sed -i 's|^ROOT=.*|ROOT=${{ github.workspace }}|' mkconfig
           sed -i 's|SYSHOST=Plan9|SYSHOST=${{ matrix.syshost }}|' mkconfig
           sed -i 's|#OBJTYPE=386|OBJTYPE=${{ matrix.objtype }}|' mkconfig
           sed -i 's|OBJTYPE=\$objtype|OBJTYPE=${{ matrix.objtype }}|' mkconfig
@@ -184,7 +185,7 @@ jobs:
           cd ${{ github.workspace }}
           
           # Configure mkconfig
-          sed -i 's|ROOT=/usr/inferno|ROOT=${{ github.workspace }}|' mkconfig
+          sed -i 's|^ROOT=.*|ROOT=${{ github.workspace }}|' mkconfig
           sed -i 's|SYSHOST=Plan9|SYSHOST=Linux|' mkconfig
           sed -i 's|#OBJTYPE=386|OBJTYPE=386|' mkconfig
           sed -i 's|OBJTYPE=\$objtype|OBJTYPE=386|' mkconfig
@@ -253,7 +254,7 @@ jobs:
             build-essential
           
           # Configure mkconfig
-          sed -i 's|ROOT=/usr/inferno|ROOT=${{ github.workspace }}|' mkconfig
+          sed -i 's|^ROOT=.*|ROOT=${{ github.workspace }}|' mkconfig
           sed -i 's|SYSHOST=Plan9|SYSHOST=Linux|' mkconfig
           sed -i 's|#OBJTYPE=386|OBJTYPE=386|' mkconfig
           sed -i 's|OBJTYPE=\$objtype|OBJTYPE=386|' mkconfig
