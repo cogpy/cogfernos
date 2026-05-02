@@ -17,6 +17,11 @@ typedef unsigned short ushort;
 typedef unsigned char uchar;
 typedef unsigned long ulong;
 typedef unsigned int uint;
+typedef unsigned int u32int;
+typedef unsigned char u8int;
+typedef unsigned short u16int;
+typedef unsigned long long u64int;
+typedef unsigned int mpdigit;	/* for libmp/mp.h */
 typedef signed char schar;
 typedef long long vlong;
 typedef unsigned long long uvlong;
