@@ -1,10 +1,9 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
 #include "lib9.h"
+#include <sys/types.h>
+#include <fcntl.h>
 
 int
-create(char *f, int mode, ulong perm)
+create(char *f, int mode, int perm)
 {
 	int m;
 

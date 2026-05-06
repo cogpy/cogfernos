@@ -1,9 +1,6 @@
 #include "lib9.h"
 #include <pwd.h>
 
-/* forward declaration to avoid including <unistd.h> which conflicts with kern.h */
-extern unsigned int getuid(void);
-
 char*
 getuser(void)
 {

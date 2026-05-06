@@ -30,8 +30,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            gcc \
-            libc6-dev \
+            gcc gcc-multilib \
+            libc6-dev-i386 \
             libx11-dev \
             libxext-dev \
             build-essential
