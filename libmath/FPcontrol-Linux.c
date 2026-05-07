@@ -1,5 +1,4 @@
 #include "lib9.h"
-#include <u.h>
 #include "mathi.h"
 
 void
