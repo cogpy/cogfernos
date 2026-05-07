@@ -65,6 +65,19 @@ jobs:
           # Restore any version-controlled binaries that might have been overwritten
           git restore ${{ matrix.syshost }}/${{ matrix.objtype }}/bin/data2c ${{ matrix.syshost }}/${{ matrix.objtype }}/bin/iyacc ${{ matrix.syshost }}/${{ matrix.objtype }}/bin/mkext 2>/dev/null || true
       
+      - name: Download FreeType source
+        run: |
+          # FreeType 2.13.2 source is required by libfreetype/mkfile but not vendored in the repo.
+          # Download and extract it to libfreetype/libfreetype/ where the mkfile expects it.
+          cd ${{ github.workspace }}/libfreetype
+          curl -L "https://download.savannah.gnu.org/releases/freetype/freetype-2.13.2.tar.xz" \
+               -o freetype-2.13.2.tar.xz
+          echo "12991c4e55c506dd7f9b765933e62fd2be2e06d421505d7950a132e4f1bb484d  freetype-2.13.2.tar.xz" \
+               | sha256sum -c -
+          tar xf freetype-2.13.2.tar.xz
+          mv freetype-2.13.2 libfreetype
+          rm freetype-2.13.2.tar.xz
+
       - name: Build system libraries and tools
         run: |
           cd ${{ github.workspace }}
