@@ -18,6 +18,11 @@
 #define PTHREAD_STACK_MIN ((size_t)sysconf(_SC_THREAD_STACK_MIN))
 #endif
 
+/* Default stack size for kproc pthreads; 0 means use system default */
+#ifndef KSTACK
+#define KSTACK	0
+#endif
+
 
 typedef struct Osdep Osdep;
 struct Osdep {
