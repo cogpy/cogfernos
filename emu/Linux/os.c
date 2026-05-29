@@ -31,6 +31,7 @@ enum
 };
 char *hosttype = "Linux";
 
+void	(*coherence)(void);
 typedef sem_t	Sem;
 
 extern int dflag;

@@ -61,7 +61,7 @@ Dirtab contab[] =
 };
 
 Queue*	gkscanq;		/* Graphics keyboard raw scancodes */
-char*	gkscanid;		/* name of raw scan format (if defined) */
+extern char*	gkscanid;		/* name of raw scan format (if defined) */
 Queue*	gkbdq;			/* Graphics keyboard unprocessed input */
 Queue*	kbdq;			/* Console window unprocessed keyboard input */
 Queue*	lineq;			/* processed console input */

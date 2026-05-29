@@ -28,12 +28,13 @@ jobs:
       
       - name: Set up build environment
         run: |
+          sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y \
             gcc gcc-multilib \
             libc6-dev-i386 \
-            libx11-dev \
-            libxext-dev \
+            libx11-dev:i386 \
+            libxext-dev:i386 \
             build-essential
       
       - name: Configure mkconfig for CI
