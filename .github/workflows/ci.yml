@@ -49,11 +49,14 @@ jobs:
           sed -i 's|OBJTYPE=\$objtype|OBJTYPE=${{ matrix.objtype }}|' mkconfig
 
           # emu/port sources require $ROOT/$SYSTARG/$OBJTYPE/include/emu.h.
-          # Linux trees in this repo don't vendor that header, so seed it from
-          # the architecture-matching Plan9 include directory.
+          # If the repo already ships a host-specific emu.h (e.g. Linux/386),
+          # use it as-is; otherwise fall back to the Plan9 header for the same
+          # architecture.
           mkdir -p "${{ github.workspace }}/${{ matrix.syshost }}/${{ matrix.objtype }}/include"
-          cp "${{ github.workspace }}/Plan9/${{ matrix.objtype }}/include/emu.h" \
-             "${{ github.workspace }}/${{ matrix.syshost }}/${{ matrix.objtype }}/include/emu.h"
+          if [ ! -f "${{ github.workspace }}/${{ matrix.syshost }}/${{ matrix.objtype }}/include/emu.h" ]; then
+            cp "${{ github.workspace }}/Plan9/${{ matrix.objtype }}/include/emu.h" \
+               "${{ github.workspace }}/${{ matrix.syshost }}/${{ matrix.objtype }}/include/emu.h"
+          fi
           
           echo "Updated mkconfig:"
           cat mkconfig

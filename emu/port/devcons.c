@@ -7,7 +7,7 @@
 #include	"keyboard.h"
 
 extern int cflag;
-int	exdebug;
+extern int exdebug;
 extern int keepbroken;
 
 enum

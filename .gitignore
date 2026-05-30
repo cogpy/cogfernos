@@ -60,6 +60,8 @@ y.debug
 # build artifacts from makemk.sh and mk install
 /[A-Z]*/*/bin/mk
 /[A-Z]*/*/include/
+# except the hand-written Linux emu.h which must not use the Plan9 Xup pattern
+!/Linux/386/include/emu.h
 
 # no binaries are committed for any of the netbsd ports
 # can be deleted if wildcard from the comment below is enabled

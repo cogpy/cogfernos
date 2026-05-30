@@ -16,6 +16,9 @@
 #include	<sched.h>
 #define pthread_yield() (sched_yield())
 #define PTHREAD_STACK_MIN ((size_t)sysconf(_SC_THREAD_STACK_MIN))
+#elif defined(__linux__)
+#include	<sched.h>
+#define pthread_yield() (sched_yield())
 #endif
 
 /* Default stack size for kproc pthreads; 0 means use system default */

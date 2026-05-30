@@ -32,3 +32,5 @@ FN(getfsr):
 FN(setfsr):
 	fclex
 	ret
+
+	.section .note.GNU-stack,"",@progbits
