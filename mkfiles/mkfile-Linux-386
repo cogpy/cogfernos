@@ -16,6 +16,7 @@ CFLAGS=		-g\
 		-O\
 		-fno-strict-aliasing\
 		-fno-aggressive-loop-optimizations\
+		-fcommon\
 		-Wuninitialized -Wunused-variable -Wreturn-type -Wimplicit\
 		-I$ROOT/Linux/386/include\
 		-I$ROOT/include\
