@@ -49,3 +49,5 @@ _tas:
 	movl	4(%esp), %ecx
 	xchgl	%eax, 0(%ecx)
 	ret
+
+	.section .note.GNU-stack,"",@progbits
